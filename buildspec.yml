@@ -3,19 +3,12 @@ version: 0.2
 phases:
   install:
     commands:
-      - yum install -y openssh-clients
-      - echo "Fetching private key from SSM"
-      - aws ssm get-parameter --name "/cicd/ec2-key" --with-decryption --query "Parameter.Value" --output text > ec2-key.pem
-      - chmod 600 ec2-key.pem
-
+      - echo "Nothing to install"
   build:
     commands:
       - echo "Building application"
-      - mkdir -p output
-      - cp index.html output/index.html
-
-  post_build:
-    commands:
-      - echo "Deploying to EC2"
-      - scp -o StrictHostKeyChecking=no -i ec2-key.pem -r output/* ec2-user@54.226.97.39:/home/ec2-user/
-      - ssh -o StrictHostKeyChecking=no -i ec2-key.pem ec2-user@54.226.97.39 "sudo mv /home/ec2-user/index.html /var/www/html/index.html && sudo systemctl restart httpd"
+artifacts:
+  files:
+    - index.html
+    - appspec.yml
+    - scripts/**/*
