@@ -6,7 +6,7 @@ phases:
       - echo "Nothing to install"
   build:
     commands:
-      - echo "Building application"
+      - echo "Packaging application"
 artifacts:
   files:
     - index.html
