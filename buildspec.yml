@@ -12,9 +12,9 @@ phases:
   build:
     commands:
       - echo "Copying files to EC2"
-      - scp -o StrictHostKeyChecking=no -i codebuild_key index.html ec2-user@54.226.97.39:/var/www/html/
-      - ssh -o StrictHostKeyChecking=no -i codebuild_key ec2-user@54.226.97.39 "sudo systemctl restart httpd"
+      - scp -o StrictHostKeyChecking=no -i codebuild_key index.html ec2-user@100.59.207.161:/var/www/html/
+      - ssh -o StrictHostKeyChecking=no -i codebuild_key ec2-user@100.59.207.161 "sudo systemctl restart httpd"
 
 artifacts:
   files:
-    - index.html
+    - '**/*'
