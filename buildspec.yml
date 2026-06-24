@@ -3,12 +3,18 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Nothing to install"
+      - yum install -y openssh-clients jq
+      - echo "Fetching private key from Secrets Manager"
+      - PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id codebuild-ssh-key --query SecretString --output text | jq -r .private_key)
+      - echo "$PRIVATE_KEY" > codebuild_key
+      - chmod 600 codebuild_key
+
   build:
     commands:
-      - echo "Packaging application"
+      - echo "Copying files to EC2"
+      - scp -o StrictHostKeyChecking=no -i codebuild_key index.html ec2-user@54.226.97.39:/var/www/html/
+      - ssh -o StrictHostKeyChecking=no -i codebuild_key ec2-user@54.226.97.39 "sudo systemctl restart httpd"
+
 artifacts:
   files:
     - index.html
-    - appspec.yml
-    - scripts/**/*
