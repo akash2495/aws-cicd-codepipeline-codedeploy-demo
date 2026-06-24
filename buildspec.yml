@@ -3,18 +3,12 @@ version: 0.2
 phases:
   install:
     commands:
-      - yum install -y openssh-clients jq
+      - yum install -y openssh-clients
 
       - echo "Fetching private key from Secrets Manager"
-
-      - aws secretsmanager get-secret-value --secret-id codebuild-ssh-key --query SecretString --output text | jq -r '.private_key' > codebuild_key
+      - aws secretsmanager get-secret-value --secret-id codebuild-ssh-key --query SecretString --output text > codebuild_key
 
       - chmod 600 codebuild_key
-
-      - echo "Testing private key"
-      - head -1 codebuild_key
-      - tail -1 codebuild_key
-      - ssh-keygen -l -f codebuild_key
 
   build:
     commands:
